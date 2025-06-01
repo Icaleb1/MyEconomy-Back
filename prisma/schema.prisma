@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // ou "postgresql" | "sqlite" dependendo do seu banco
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id              Int       @id @default(autoincrement())
+  nome            String
+  email           String    @unique
+  dataNascimento  DateTime
+  senha           String
+
+  // Relacionamentos
+  limites         Limite[]
+  despesas        Despesa[]
+}
+
+model Limite {
+  id             Int       @id @default(autoincrement())
+  valor          Float
+  mesReferencia  String
+
+  usuarioId      Int
+  usuario        Usuario   @relation(fields: [usuarioId], references: [id])
+
+  @@unique([usuarioId, mesReferencia]) // Garante um limite por mês por usuário
+}
+
+model Despesa {
+  id             Int       @id @default(autoincrement())
+  descricao      String
+  valor          Float
+  mesReferencia  String
+
+  usuarioId      Int
+  usuario        Usuario   @relation(fields: [usuarioId], references: [id])
+}

@@ -1,7 +1,7 @@
 export interface Usuario {
     nome: string;
     email: string;
-    dataNascimento: Date;
+    dataNascimento: Date | string;
     senha: string;
     confirmarSenha: string;
 }
