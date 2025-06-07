@@ -36,3 +36,37 @@ export const cadastroController = async (req: Request, res: Response): Promise<v
         res.status(status).json({ error: message });
     }
 };
+
+export const perfilController = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const idUsuarioNaUrl = Number(req.params.id);
+        const idUsuarioAutenticado = req.user?.userId;
+
+        if (isNaN(idUsuarioNaUrl)) {
+            res.status(400).json({ error: 'ID do usuário inválido.' });
+            return;
+        }
+
+        if (!idUsuarioAutenticado) {
+            res.status(401).json({ error: 'Usuário não autenticado.' });
+            return;
+        }
+
+        if (idUsuarioNaUrl !== idUsuarioAutenticado) {
+            res.status(403).json({ error: 'Acesso negado. Você só pode acessar seu próprio perfil.' });
+            return;
+        }
+
+        const usuario = await usuarioService.buscarPerfil(idUsuarioNaUrl);
+
+        res.status(200).json(usuario);
+
+    } catch (error: any) {
+        console.error('Erro na busca do perfil:', error);
+
+        const status = error.status || 500;
+        const message = error.message || 'Erro interno do servidor';
+
+        res.status(status).json({ error: message });
+    }
+}

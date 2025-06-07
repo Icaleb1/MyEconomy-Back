@@ -13,7 +13,7 @@ if (!JWT_SECRET) {
 declare module 'express' {
   interface Request {
     user?: {
-      userId: string;
+      userId: number;
       email: string;
     };
   }
@@ -37,7 +37,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     }
     
     req.user = {
-      userId: decoded.userId as string,
+      userId: decoded.idUsuario,
       email: decoded.email as string,
     };
 

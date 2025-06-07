@@ -3,7 +3,7 @@ CREATE TABLE `Usuario` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `dataNascimento` DATETIME(3) NOT NULL,
+    `dataNascimento` DATE NOT NULL,
     `senha` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `Usuario_email_key`(`email`),
@@ -14,7 +14,7 @@ CREATE TABLE `Usuario` (
 CREATE TABLE `Limite` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `valor` DOUBLE NOT NULL,
-    `mesReferencia` VARCHAR(191) NOT NULL,
+    `mesReferencia` DATE NOT NULL,
     `usuarioId` INTEGER NOT NULL,
 
     UNIQUE INDEX `Limite_usuarioId_mesReferencia_key`(`usuarioId`, `mesReferencia`),
@@ -26,7 +26,7 @@ CREATE TABLE `Despesa` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `descricao` VARCHAR(191) NOT NULL,
     `valor` DOUBLE NOT NULL,
-    `mesReferencia` VARCHAR(191) NOT NULL,
+    `mesReferencia` DATE NOT NULL,
     `usuarioId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)

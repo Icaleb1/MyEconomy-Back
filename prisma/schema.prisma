@@ -3,39 +3,37 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql" // ou "postgresql" | "sqlite" dependendo do seu banco
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Usuario {
-  id              Int       @id @default(autoincrement())
-  nome            String
-  email           String    @unique
-  dataNascimento  DateTime
-  senha           String
-
-  // Relacionamentos
-  limites         Limite[]
-  despesas        Despesa[]
+  id             Int       @id @default(autoincrement())
+  nome           String
+  email          String    @unique
+  dataNascimento DateTime  @db.Date
+  senha          String
+  despesas       Despesa[]
+  limites        Limite[]
 }
 
 model Limite {
-  id             Int       @id @default(autoincrement())
-  valor          Float
-  mesReferencia  String
+  id            Int      @id @default(autoincrement())
+  valor         Float
+  mesReferencia DateTime @db.Date
+  usuarioId     Int
+  usuario       Usuario  @relation(fields: [usuarioId], references: [id])
 
-  usuarioId      Int
-  usuario        Usuario   @relation(fields: [usuarioId], references: [id])
-
-  @@unique([usuarioId, mesReferencia]) // Garante um limite por mês por usuário
+  @@unique([usuarioId, mesReferencia])
 }
 
 model Despesa {
-  id             Int       @id @default(autoincrement())
-  descricao      String
-  valor          Float
-  mesReferencia  String
+  id            Int      @id @default(autoincrement())
+  descricao     String
+  valor         Float
+  mesReferencia DateTime @db.Date
+  usuarioId     Int
+  usuario       Usuario  @relation(fields: [usuarioId], references: [id])
 
-  usuarioId      Int
-  usuario        Usuario   @relation(fields: [usuarioId], references: [id])
+  @@index([usuarioId], map: "Despesa_usuarioId_fkey")
 }

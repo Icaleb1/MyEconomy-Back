@@ -1,6 +1,6 @@
 import { prisma } from '../Prisma';
 import { hashSenha } from '../utils/HashUtils';
-import { Usuario } from '../models/DTOs/Usuário'; // seu DTO separado
+import { Usuario } from '../models/DTOs/Usuário';
 
 export class UsuarioService {
     async cadastrarUsuario(usuario: Usuario) {
@@ -26,6 +26,19 @@ export class UsuarioService {
 
         const { senha, ...usuarioSemSenha } = usuarioCriado;
 
+        return usuarioSemSenha;
+    }
+
+    async buscarPerfil(idUsuario: number) {
+        const usuario = await prisma.usuario.findUnique({
+            where: { id: idUsuario },
+        });
+    
+        if (!usuario) {
+            throw { status: 404, message: 'Usuário não encontrado' };
+        }
+    
+        const { senha, ...usuarioSemSenha } = usuario;
         return usuarioSemSenha;
     }
 }
