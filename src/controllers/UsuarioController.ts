@@ -39,25 +39,14 @@ export const cadastroController = async (req: Request, res: Response): Promise<v
 
 export const perfilController = async (req: Request, res: Response): Promise<void> => {
     try {
-        const idUsuarioNaUrl = Number(req.params.id);
         const idUsuarioAutenticado = req.user?.userId;
-
-        if (isNaN(idUsuarioNaUrl)) {
-            res.status(400).json({ error: 'ID do usuário inválido.' });
-            return;
-        }
 
         if (!idUsuarioAutenticado) {
             res.status(401).json({ error: 'Usuário não autenticado.' });
             return;
         }
 
-        if (idUsuarioNaUrl !== idUsuarioAutenticado) {
-            res.status(403).json({ error: 'Acesso negado. Você só pode acessar seu próprio perfil.' });
-            return;
-        }
-
-        const usuario = await usuarioService.buscarPerfil(idUsuarioNaUrl);
+        const usuario = await usuarioService.buscarPerfil(idUsuarioAutenticado);
 
         res.status(200).json(usuario);
 

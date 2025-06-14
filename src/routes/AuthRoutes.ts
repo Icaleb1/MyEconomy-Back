@@ -13,7 +13,7 @@ router.post('/cadastro', validarCadastro, cadastroController);
 
 router.post('/login', validarLogin, loginController);
 
-router.get('/perfil/:id', authenticateToken, perfilController)
+router.get('/perfil', authenticateToken, perfilController);
 
 router.post('/criar-limite', authenticateToken, validarLimite, limiteController);
 
