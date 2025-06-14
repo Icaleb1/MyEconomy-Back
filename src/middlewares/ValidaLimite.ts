@@ -27,14 +27,7 @@ export const validarLimite = async (req: Request<{}, {}, Limite>, res: Response,
     const mesAtual = hoje.getMonth();
     const anoAtual = hoje.getFullYear();
 
-    if (
-        data.getFullYear() < anoAtual ||
-        (data.getFullYear() === anoAtual && data.getMonth() < mesAtual)
-    ) {
-        res.status(400).json({ error: 'Não é permitido criar limite para um mês anterior ao atual' });
-        return;
-    }
-
+   
     const limiteExistente = await prisma.limite.findFirst({
         where: {
             usuarioId: Number(userId),
@@ -49,6 +42,15 @@ export const validarLimite = async (req: Request<{}, {}, Limite>, res: Response,
         res.status(400).json({ error: 'Já existe um limite cadastrado para este mês' });
         return;
     }
+
+    if (
+        data.getFullYear() < anoAtual ||
+        (data.getFullYear() === anoAtual && data.getMonth() < mesAtual)
+    ) {
+        res.status(400).json({ error: 'Não é permitido criar limite para um mês anterior ao atual' });
+        return;
+    }
+
 
     next();
 };

@@ -19,4 +19,23 @@ export class LimiteService {
 
     }
 
+    async buscarLimitePorMes(idUsuario: number, ano: number, mes: number) {
+        const inicioMes = new Date(ano, mes - 1, 1);
+        const fimMes = new Date(ano, mes, 1); 
+
+        const limite = await prisma.limite.findFirst({
+            where: {
+                usuarioId: idUsuario,
+                mesReferencia: {
+                    gte: inicioMes,
+                    lt: fimMes,
+                }
+            }
+        });
+
+        return limite;
+    }
+
+
+
 }

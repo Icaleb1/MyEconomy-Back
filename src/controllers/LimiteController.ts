@@ -5,16 +5,22 @@ import { LimiteService } from "../service/LimiteService";
 const limiteService = new LimiteService();
 
 export const limiteController = async (req: Request, res: Response): Promise<void> => {
-    const limiteDto: Limite = req.body;
-    const userId = Number(req.user?.userId);
+     const idUsuarioAutenticado = req.user?.userId;
 
-    if (!userId) {
+     if (!idUsuarioAutenticado) {
+         res.status(401).json({ error: 'Usuário não autenticado.' });
+         return;
+     }
+
+    const limiteDto: Limite = req.body;
+
+    if (!idUsuarioAutenticado) {
         res.status(401).json({ error: 'Usuário não autenticado' });
         return;
     }
 
     try {
-        const limite = await limiteService.criarLimite(limiteDto, userId);
+        const limite = await limiteService.criarLimite(limiteDto, idUsuarioAutenticado);
 
         res.status(201).json({
             message: 'Limite criado com sucesso',
@@ -27,6 +33,49 @@ export const limiteController = async (req: Request, res: Response): Promise<voi
         const status = error.status || 500;
         const message = error.message || 'Erro interno do servidor';
 
+        res.status(status).json({ error: message });
+    }
+};
+
+
+export const buscarLimitePorMesController = async (req: Request, res: Response): Promise<void> => {
+    const idUsuarioAutenticado = req.user?.userId;
+
+    if (!idUsuarioAutenticado) {
+        res.status(401).json({ error: 'Usuário não autenticado.' });
+        return;
+    }
+
+    // Usar req.query para GET
+    const ano = req.query.ano as string;
+    const mes = req.query.mes as string;
+
+    if (!ano || !mes) {
+        res.status(400).json({ error: 'Ano e mês são obrigatórios' });
+        return;
+    }
+
+    const anoNum = Number(ano);
+    const mesNum = Number(mes);
+
+    if (isNaN(anoNum) || isNaN(mesNum) || mesNum < 1 || mesNum > 12) {
+        res.status(400).json({ error: 'Ano ou mês inválidos' });
+        return;
+    }
+
+    try {
+        const limite = await limiteService.buscarLimitePorMes(idUsuarioAutenticado, anoNum, mesNum);
+
+        if (!limite) {
+            res.status(404).json({ error: 'Limite não encontrado para o mês/ano informado' });
+            return;
+        }
+
+        res.status(200).json(limite);
+    } catch (error: any) {
+        console.error('Erro ao buscar limite:', error);
+        const status = error.status || 500;
+        const message = error.message || 'Erro interno do servidor';
         res.status(status).json({ error: message });
     }
 };

@@ -11,21 +11,18 @@ if (!JWT_SECRET) {
 
 import { Login } from '../models/DTOs/Login';
 
-export const loginController = async (
-  req: Request<{}, {}, Login>, 
-  res: Response
-): Promise<void> => {
-  const { email, senha } = req.body;
+export const loginController = async (req: Request, res: Response): Promise<void> => {
+  const login: Login = req.body;
 
   try {
-    const usuarioRegistrado = await prisma.usuario.findUnique({ where: { email } });
+    const usuarioRegistrado = await prisma.usuario.findUnique({ where: { email: login.email } });
 
     if (!usuarioRegistrado) {
       res.status(404).json({ error: 'Usuário não encontrado' });
       return;
     }
 
-    const senhaEhValida = await bcrypt.compare(senha, usuarioRegistrado.senha);
+    const senhaEhValida = await bcrypt.compare(login.senha, usuarioRegistrado.senha);
 
     if (!senhaEhValida) {
       res.status(400).json({ error: 'E-mail ou senha inválido' });

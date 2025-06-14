@@ -3,7 +3,7 @@ import { cadastroController, perfilController } from '../controllers/UsuarioCont
 import { validarCadastro } from '../middlewares/ValidaCadastro';
 import { validarLogin } from '../middlewares/ValidaLogin';
 import { loginController } from '../controllers/LoginController';
-import { limiteController } from '../controllers/LimiteController';
+import { buscarLimitePorMesController, limiteController } from '../controllers/LimiteController';
 import { authenticateToken } from '../middlewares/AuthenticateToken';
 import { validarLimite } from '../middlewares/ValidaLimite';
 
@@ -16,5 +16,8 @@ router.post('/login', validarLogin, loginController);
 router.get('/perfil', authenticateToken, perfilController);
 
 router.post('/criar-limite', authenticateToken, validarLimite, limiteController);
+
+router.get('/buscar-limite', authenticateToken, buscarLimitePorMesController);
+
 
 export default router;
