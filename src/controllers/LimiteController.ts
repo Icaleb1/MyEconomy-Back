@@ -13,12 +13,7 @@ export const limiteController = async (req: Request, res: Response): Promise<voi
      }
 
     const limiteDto: Limite = req.body;
-
-    if (!idUsuarioAutenticado) {
-        res.status(401).json({ error: 'Usuário não autenticado' });
-        return;
-    }
-
+    
     try {
         const limite = await limiteService.criarLimite(limiteDto, idUsuarioAutenticado);
 
@@ -46,7 +41,6 @@ export const buscarLimitePorMesController = async (req: Request, res: Response):
         return;
     }
 
-    // Usar req.query para GET
     const ano = req.query.ano as string;
     const mes = req.query.mes as string;
 
