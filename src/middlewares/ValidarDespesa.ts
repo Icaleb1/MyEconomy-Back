@@ -5,6 +5,8 @@ export const validarDespesa = async (req: Request<{}, {}, Despesa>, res: Respons
     const { valor, mesReferencia, descricao } = req.body;
     const userId = req.user?.userId;
 
+    console.log(mesReferencia);
+
     if (!valor || !mesReferencia || !descricao) {
         res.status(400).json({ error: 'Todos os campos são obrigatórios' });
         return;

@@ -14,6 +14,9 @@ export const despesaController = async (req: Request, res: Response): Promise<vo
 
     const despesaDto: Despesa = req.body;
 
+
+    console.log(despesaDto)
+
     try {
         const despesa = await despesaService.criarDespesa(despesaDto, idUsuarioAutenticado);
 
